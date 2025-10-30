@@ -1,0 +1,14 @@
+.budget-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.budget-container h2 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.budget-container p {
+  font-size: 16px;
+  color: #666;
+}
