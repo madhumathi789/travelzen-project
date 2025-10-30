@@ -1,26 +1,50 @@
+/* ========================================================= */
+/* BASE LAYOUT */
+/* ========================================================= */
 .home-container {
   display: flex;
   min-height: 100vh;
-  background-color: #f8f9fa;
-  font-family: 'Arial', sans-serif;
+  /* Overall page background color - light green outside main content area */
+  background: #e8f5e9; 
+  font-family: 'Poppins', sans-serif; 
+  color: #333;
+  overflow: hidden; 
 }
 
+/* Custom Scrollbar */
+.main-content::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.main-content::-webkit-scrollbar-thumb {
+  background: #c8e6c9; 
+  border-radius: 3px;
+}
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: #a7d9b9;
+}
+
+
+/* ========================================================= */
+/* SIDEBAR STYLES */
+/* ========================================================= */
 .sidebar {
   width: 250px;
   background-color: #ffffff;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  padding: 20px 0;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05); 
+  padding: 30px 0; 
   display: flex;
   flex-direction: column;
+  z-index: 1000;
 }
 
 .logo {
-  font-size: 24px;
-  font-weight: bold;
-  color: #28a745;
-  text-align: center;
+  font-size: 26px; 
+  font-weight: 700;
+  color: #2e7d32; 
+  text-align: left; 
   margin-bottom: 40px;
-  padding: 0 20px;
+  padding: 0 20px; 
 }
 
 .nav-list {
@@ -30,188 +54,367 @@
 }
 
 .nav-item {
-  padding: 12px 20px;
-  color: #6c757d;
+  padding: 12px 20px; 
+  color: #495057;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.2s ease-in-out;
   position: relative;
+  font-size: 15px;
 }
 
 .nav-item:hover {
-  background-color: #f8f9fa;
-}
-
-.nav-item.active {
-  color: #28a745;
-  background-color: #e8f5e8;
+  background-color: #e9ecef;
 }
 
 .nav-item a {
   text-decoration: none;
   color: inherit;
-  display: flex;
-  align-items: center;
+  display: block; 
 }
 
-.nav-item::before {
-  content: '';
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: transparent;
+/* Active NavLink state */
+.nav-item a.active-home {
+  color: #2e7d32; 
+  background-color: #c8e6c9; 
+  font-weight: 600;
+}
+.nav-item.logout {
+  margin-top: auto;
 }
 
-.nav-item.active::before {
-  background-color: #28a745;
-}
 
+/* ========================================================= */
+/* MAIN CONTENT (Occupies entire remaining page width) */
+/* ========================================================= */
 .main-content {
   flex: 1;
-  padding: 20px;
+  /* Increased padding to create the horizontal gap visible in the screenshots */
+  padding: 40px; 
   overflow-y: auto;
+  /* Content background color (visible behind the cards) */
+  background: #fdfdfd; 
 }
 
+/* ========================================================= */
+/* TRIP HEADER CARD (Stretches full width) */
+/* ========================================================= */
 .trip-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px; 
+  background-color: #ffffff; 
+  padding: 25px 35px; /* Inner padding for card content */
+  border-radius: 12px; 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); 
+  width: auto; 
 }
 
 .trip-header h1 {
-  margin: 0;
-  color: #333;
-  font-size: 28px;
+  font-size: 30px; 
+  font-weight: 600;
 }
 
 .trip-meta {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 5px;
+  gap: 4px;
+  font-size: 14px; 
+  color: #616161;
 }
 
 .budget {
-  font-weight: bold;
-  color: #28a745;
-  font-size: 18px;
+  font-weight: 700;
+  color: #2e7d32; 
+  font-size: 20px; 
 }
 
+/* ========================================================= */
+/* DAYS SECTION (Stretches full width) */
+/* ========================================================= */
 .days-section {
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   background-color: #ffffff;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  width: auto;
 }
 
 .days-header {
   display: flex;
   overflow-x: auto;
-  padding: 10px 0;
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+}
+
+.days-header::-webkit-scrollbar {
+  display: none; 
 }
 
 .day {
-  min-width: 120px;
+  min-width: 140px; 
+  flex-shrink: 0; 
   text-align: center;
-  padding: 10px;
-  border-right: 1px solid #dee2e6;
-  background-color: #f8f9fa;
+  padding: 15px 10px; 
+  border-right: 1px solid #eee; 
+  background-color: #f7fcf7;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.2s ease;
 }
 
 .day:last-child {
   border-right: none;
 }
 
+.day:hover:not(.active) {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
 .day.active {
-  background-color: #28a745;
+  background-color: #2e7d32; 
   color: white;
+  border-right-color: transparent; 
 }
 
 .day-label {
   display: block;
-  font-weight: bold;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 14px; 
+  margin-bottom: 2px;
 }
 
 .day-date {
   display: block;
-  font-size: 12px;
-  opacity: 0.8;
+  font-size: 11px;
+  opacity: 0.9;
 }
 
 .day-title {
   display: block;
-  font-size: 12px;
+  font-size: 10px;
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   margin-top: 5px;
+  opacity: 0.8;
+}
+
+/* ========================================================= */
+/* BUDGET SUMMARY PANEL (Stretches full width) */
+/* ========================================================= */
+.budget-summary-floating {
+  position: sticky;
+  top: 20px; 
+  padding: 18px 25px; 
+  background: #e0f2e0; 
+  border: 1px solid #c8e6c9; 
+  border-radius: 8px; 
+  margin-bottom: 25px;
+  text-align: center; 
+  font-size: 1.2em; 
+  font-weight: 600;
+  color: #2e7d32;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  z-index: 10; 
+  width: auto;
+}
+.budget-summary-floating strong {
+  font-size: 1.4em; 
+  font-weight: 700;
+  margin-left: 8px;
+  color: #2e7d32;
+}
+
+
+/* ========================================================= */
+/* ITINERARY SECTIONS (Stretches full width) */
+/* ========================================================= */
+.itinerary-sections,
+.daily-itinerary-detail {
+  width: auto;
+  background-color: #ffffff;
+  padding: 25px 35px; 
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+  margin-bottom: 20px;
 }
 
 .itinerary-sections {
   display: grid;
-  gap: 20px;
+  grid-template-columns: 1fr; 
+  gap: 20px; 
 }
 
-.itinerary-section {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.itinerary-section h2 {
-  margin: 0 0 15px 0;
+.itinerary-section h2,
+.daily-itinerary-detail h2 {
+  margin: 0 0 20px 0;
   color: #333;
-  font-size: 20px;
+  font-size: 20px; 
+  font-weight: 600;
+  border-bottom: 1px solid #eee; 
+  padding-bottom: 12px;
+}
+
+/* Highlight section (for Essential Apps) */
+.itinerary-section.highlight {
+  background-color: #fff9e6; 
+  border-color: #ffe082;
 }
 
 .list {
   margin: 0;
-  padding-left: 20px;
+  padding-left: 0; 
+  list-style: none; 
 }
 
-.list li {
-  margin-bottom: 10px;
-  color: #555;
-  line-height: 1.5;
+/* Check list items */
+.checklist-list li {
+  padding: 15px 0; 
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.price {
-  float: right;
+.checklist-list li:last-child {
+  border-bottom: none;
+}
+
+.checklist-list li label {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  cursor: pointer;
+  gap: 15px;
+}
+
+.item-text {
+  flex-grow: 1; 
+  font-size: 15px; 
+  line-height: 1.5; 
+  color: #555; 
+}
+
+.item-price {
+  font-weight: 600;
+  color: #007bff; 
+  min-width: 80px; 
+  text-align: right;
+  font-family: 'Roboto Mono', monospace; 
+  font-size: 14px; 
+}
+
+/* Input checkbox styles */
+.checklist-list input[type="checkbox"] {
+  appearance: none; 
+  width: 20px; 
+  height: 20px;
+  border: 2px solid #a7d9b9; 
+  border-radius: 4px; 
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.checklist-list input[type="checkbox"]:checked {
+  background-color: #4CAF50; 
+  border-color: #4CAF50;
+}
+
+.checklist-list input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px; 
   font-weight: bold;
-  color: #28a745;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+.checklist-list li.checked {
+  color: #9e9e9e; 
+  text-decoration: line-through;
+  opacity: 0.8;
+}
+
+/* Regular list items inside sections */
+.itinerary-section ol li,
+.itinerary-section ul li:not(.checklist-list li) {
+  padding: 8px 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #555;
+}
+
+
+/* ========================================================= */
+/* RESPONSIVE DESIGN */
+/* ========================================================= */
+@media (max-width: 992px) {
   .sidebar {
-    width: 200px;
+      width: 220px;
   }
-  
-  .trip-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+  .main-content {
+      padding: 25px; /* Reduced padding on smaller screens */
   }
-  
-  .trip-meta {
-    align-items: flex-start;
+  .trip-header h1 {
+      font-size: 26px; 
   }
-  
-  .days-header {
-    flex-wrap: wrap;
+  .budget {
+      font-size: 18px; 
   }
-  
   .day {
-    min-width: 100px;
+      min-width: 110px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-container {
+      flex-direction: column; 
+  }
+  .sidebar {
+      width: 100%;
+      height: auto;
+      padding: 10px 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+  .logo {
+      display: none; 
+  }
+  /* Simple horizontal navigation for mobile */
+  .nav-list {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+  }
+  .nav-item {
+      padding: 10px 15px;
+      flex-shrink: 0;
+      margin-right: 0;
+      border-radius: 0;
+      text-align: center;
+  }
+  
+  .main-content {
+      padding: 15px; 
+  }
+  .trip-header {
+      padding: 15px 20px;
+      flex-direction: column;
+      align-items: flex-start;
+  }
+  .trip-meta {
+      align-items: flex-start;
+  }
+  .days-section {
+      overflow-x: scroll;
+  }
+  .day {
+      min-width: 90px;
   }
 }
