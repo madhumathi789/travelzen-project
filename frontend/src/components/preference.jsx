@@ -33,9 +33,7 @@ export default function Preference() {
         tripDetails: location.state?.tripDetails || {},
       });
 
-      alert("Preferences saved successfully!");
-
-      // ✅ Navigate to next page (keep your existing flow)
+      // ✅ Directly navigate to /home (no alert)
       navigate("/home", {
         state: {
           preferences,
@@ -44,7 +42,6 @@ export default function Preference() {
       });
     } catch (error) {
       console.error("Error saving preferences:", error);
-      alert("Failed to save preferences. Please try again!");
     } finally {
       setLoading(false);
     }

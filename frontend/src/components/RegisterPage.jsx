@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import API from "../api"; // ✅ Import your axios instance
+import API from "../api"; // ✅ Import axios instance
 import "./login.css";
 
 const RegisterPage = () => {
@@ -8,48 +8,42 @@ const RegisterPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // ✅ Handle register with backend
+  // ✅ Handle Register API
   const handleRegister = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const response = await API.post("/auth/register", {
-        username: name,
-        email,
-        password,
-      });
-
-      if (response.status === 201) {
+      // 👇 backend expects "username", not "name"
+      const res = await API.post("/auth/register", { username: name, email, password });
+      if (res.status === 201 || res.status === 200) {
         alert("Registered successfully!");
-        navigate("/landing"); // redirect after success
+        navigate("/login"); // ✅ Go to login page after registration
       }
-    } catch (err) {
-      console.error("Registration error:", err);
-      setError(
-        err.response?.data?.message || "Registration failed. Try again!"
-      );
+    } catch (error) {
+      alert(error.response?.data?.message || "Registration failed");
+      console.error("Register Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="login-container">
-      {/* Left Section - Illustration */}
       <div className="left-section">
         <img
-          src="/Frame 228.png" // Ensure this image is in the public folder
+          src="/Frame 228.png"
           alt="Register Illustration"
           className="illustration"
         />
       </div>
 
-      {/* Right Section - Register Form */}
       <div className="right-section">
         <div className="form-container">
           <h2 className="form-title">Register</h2>
 
           <form onSubmit={handleRegister}>
-            {/* Name Field */}
             <div className="input-group">
               <label htmlFor="name">Name</label>
               <input
@@ -63,7 +57,6 @@ const RegisterPage = () => {
               />
             </div>
 
-            {/* Email Field */}
             <div className="input-group">
               <label htmlFor="email">Email</label>
               <input
@@ -77,7 +70,6 @@ const RegisterPage = () => {
               />
             </div>
 
-            {/* Password Field */}
             <div className="input-group">
               <label htmlFor="password">Password</label>
               <input
@@ -91,18 +83,13 @@ const RegisterPage = () => {
               />
             </div>
 
-            {/* Error Message */}
-            {error && <p style={{ color: "red" }}>{error}</p>}
-
-            {/* Register Button */}
-            <button className="login-btn" type="submit">
-              Register
+            <button className="login-btn" type="submit" disabled={loading}>
+              {loading ? "Registering..." : "Register"}
             </button>
 
-            {/* Navigate to Login */}
             <p className="register-text">
               Already have an account?{" "}
-              <Link to="/" className="register-link">
+              <Link to="/login" className="register-link">
                 Login now
               </Link>
             </p>

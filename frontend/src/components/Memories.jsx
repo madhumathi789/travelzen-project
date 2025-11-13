@@ -100,7 +100,7 @@ const Memories = () => {
 
   const handleCancelAction = () => setConfirmState(null);
 
-  // ✅ Fixed: Handle real file upload using FormData
+  // ✅ Fixed: Instantly show uploaded images
   const handleImageUpload = async (e) => {
     const files = e.target.files;
     if (!files.length) return;
@@ -111,11 +111,19 @@ const Memories = () => {
     }
 
     try {
-      const res = await API.put(`/memories/${selectedAlbum._id}/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await API.put(
+        `/memories/${selectedAlbum._id}/upload`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      // ✅ Instantly update UI with new photos
       setSelectedAlbum(res.data);
-      fetchAlbums();
+      setAlbums((prev) =>
+        prev.map((album) =>
+          album._id === res.data._id ? res.data : album
+        )
+      );
     } catch (error) {
       console.error("Error uploading images:", error);
     }
@@ -217,7 +225,10 @@ const Memories = () => {
             {selectedAlbum.images.length > 0 ? (
               selectedAlbum.images.map((img, i) => (
                 <div key={i} className="photo-card">
-                  <img src={`${API.defaults.baseURL}${img}`} alt={`memory-${i}`} />
+                  <img
+                    src={`${API.defaults.baseURL}${img}`}
+                    alt={`memory-${i}`}
+                  />
                   <button
                     className="delete-photo-btn"
                     onClick={() => deletePhoto(i)}

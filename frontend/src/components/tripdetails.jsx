@@ -28,13 +28,16 @@ export default function TripDetails() {
       return;
     }
 
-    if (savePersonal && (!personalBudget || personalBudget > budget)) {
+    // ✅ Fixed: convert to Number for correct comparison
+    if (
+      savePersonal &&
+      (!personalBudget || Number(personalBudget) >= Number(budget))
+    ) {
       alert("Enter a valid personal budget (less than total budget).");
       return;
     }
 
     try {
-      // ✅ Send data to backend
       const response = await API.post("/trips", {
         destinations,
         startDate,
@@ -44,19 +47,16 @@ export default function TripDetails() {
       });
 
       if (response.status === 201 || response.status === 200) {
-        alert("Trip details saved successfully!");
-        // Pass saved trip data to next page
         navigate("/preference", {
           state: {
             tripDetails: response.data,
           },
         });
       } else {
-        alert("Failed to save trip details. Please try again.");
+        console.error("Failed to save trip details");
       }
     } catch (error) {
       console.error("Error saving trip:", error);
-      alert("Error saving trip details. Please check the console.");
     }
   };
 

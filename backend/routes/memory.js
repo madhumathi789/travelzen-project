@@ -6,13 +6,11 @@ const Memory = require("../models/Memory");
 
 const router = express.Router();
 
-// ✅ Configure multer for file uploads
+// ✅ Multer storage setup
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadPath = "uploads/";
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath);
-    }
+    if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath);
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
@@ -33,16 +31,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ POST create new album
+// ✅ POST new album
 router.post("/", async (req, res) => {
   try {
     const { name, location, description } = req.body;
-    const newMemory = new Memory({
-      name,
-      location,
-      description,
-      images: [],
-    });
+    const newMemory = new Memory({ name, location, description, images: [] });
     const saved = await newMemory.save();
     res.status(201).json(saved);
   } catch (error) {
@@ -51,7 +44,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ✅ PUT upload images to existing album
+// ✅ PUT upload images
 router.put("/:id/upload", upload.array("images", 10), async (req, res) => {
   try {
     const memory = await Memory.findById(req.params.id);
@@ -68,7 +61,7 @@ router.put("/:id/upload", upload.array("images", 10), async (req, res) => {
   }
 });
 
-// ✅ PUT update album (used for deleting a single photo)
+// ✅ PUT update album (for photo delete)
 router.put("/:id", async (req, res) => {
   try {
     const { name, location, description, images } = req.body;
@@ -85,13 +78,12 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// ✅ DELETE album (and optionally delete its images from uploads)
+// ✅ DELETE album and its photos
 router.delete("/:id", async (req, res) => {
   try {
     const memory = await Memory.findById(req.params.id);
     if (!memory) return res.status(404).json({ message: "Album not found" });
 
-    // Optional: remove images from server
     memory.images.forEach((imgPath) => {
       const fullPath = path.join(__dirname, "..", imgPath);
       if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);

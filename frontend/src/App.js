@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/LoginPage.jsx";
 import RegisterPage from "./components/RegisterPage.jsx";
 import LandingPage from "./components/LandingPage.jsx";
@@ -12,28 +12,27 @@ import Journal from "./components/Journal.jsx";
 import Budget from "./components/Budget.jsx";
 import Profile from "./components/Profile.jsx";
 import EditPreference from "./components/editpreference.jsx";
+import MyTrips from "./components/MyTrips.jsx"; // ✅ Added MyTrips import
 
 function App() {
-  // Lift trip state here to share between TripDetails and Preference
-  const [tripData, setTripData] = useState(null);
-
   return (
     <Router>
       <Routes>
-        {/* Landing Page */}
-        <Route path="/landing" element={<LandingPage />} />
+        {/* Default redirect */}
+        <Route path="/" element={<Navigate to="/login" />} />
 
-        {/* Login Page */}
-        <Route path="/" element={<Login />} />
-
-        {/* Register Page */}
+        {/* Auth pages */}
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />} />
 
-        {/* Trip Planning Pages */}
-        <Route path="/tripdetails" element={<TripDetails setTripData={setTripData} />} />
-        <Route path="/preference" element={<Preference tripData={tripData} />} />
+        {/* Landing page */}
+        <Route path="/landing" element={<LandingPage />} />
 
-        {/* Main Layout Pages */}
+        {/* Other features */}
+        <Route path="/tripdetails" element={<TripDetails />} />
+        <Route path="/preference" element={<Preference />} />
+
+        {/* Layout pages */}
         <Route element={<Layout />}>
           <Route path="/home" element={<Home />} />
           <Route path="/memories" element={<Memories />} />
@@ -41,6 +40,7 @@ function App() {
           <Route path="/budget" element={<Budget />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/editpreferences" element={<EditPreference />} />
+          <Route path="/mytrips" element={<MyTrips />} /> {/* ✅ Added MyTrips route */}
         </Route>
       </Routes>
     </Router>

@@ -16,8 +16,12 @@ const MyTrips = () => {
   // Fetch trips from backend
   useEffect(() => {
     const fetchTrips = async () => {
-      const res = await API.get("/trips");
-      setTrips(res.data);
+      try {
+        const res = await API.get("/api/mytrips");
+        setTrips(res.data);
+      } catch (err) {
+        console.error("❌ Error fetching trips:", err);
+      }
     };
     fetchTrips();
   }, []);
@@ -27,9 +31,20 @@ const MyTrips = () => {
   };
 
   const handleSubmit = async () => {
-    const res = await API.post("/trips", form);
-    setTrips([...trips, res.data]);
-    setForm({ title: "", location: "", duration: "", startDate: "", endDate: "", budget: "" });
+    try {
+      const res = await API.post("/api/mytrips", form);
+      setTrips([...trips, res.data]);
+      setForm({
+        title: "",
+        location: "",
+        duration: "",
+        startDate: "",
+        endDate: "",
+        budget: "",
+      });
+    } catch (err) {
+      console.error("❌ Error adding trip:", err);
+    }
   };
 
   return (

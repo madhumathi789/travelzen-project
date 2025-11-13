@@ -18,6 +18,8 @@ const preferenceRoutes = require("./routes/preferenceRoutes");
 const memoryRoutes = require("./routes/memory");
 const itineraryRoutes = require("./routes/itineraryRoutes"); // ✅ Existing route
 const Itinerary = require("./models/Itinerary"); // ✅ Added model import
+const myTripRoutes = require("./routes/mytrips"); // ✅ NEW IMPORT
+const profileRoutes = require("./routes/profile"); // ✅ ADDED LINE
 
 // Initialize Express app
 const app = express();
@@ -144,7 +146,9 @@ app.use("/api/budget-trips", budgetTripRoutes);
 app.use("/api/journals", journalRoutes);
 app.use("/api/preferences", preferenceRoutes);
 app.use("/api/memories", memoryRoutes);
-app.use("/api/itineraries", itineraryRoutes); // ✅ Already added
+app.use("/api/itineraries", itineraryRoutes);
+app.use("/api/mytrips", myTripRoutes);
+app.use("/api/profile", profileRoutes); // ✅ ADDED PROFILE ROUTE
 
 // AI Generation Route
 app.post("/api/generate-itinerary", generateItinerary);

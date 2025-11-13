@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./Home.css";
 
 const Home = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { tripDetails, preferences } = location.state || {};
 
   const [trip, setTrip] = useState(null);
-  const [activeDay, setActiveDay] = useState(-1); // Start at -1 for Pre-Trip
+  const [activeDay, setActiveDay] = useState(-1);
   const [loading, setLoading] = useState(true);
   const [spentItems, setSpentItems] = useState({});
 
-  // --- Utility Functions ---
   const getTransportIcon = (type) => {
     switch (type) {
       case "Train":
@@ -28,11 +28,12 @@ const Home = () => {
   const handleItemToggle = (itemId, price) => {
     setSpentItems((prev) => {
       const newItems = { ...prev };
-      const numericPrice = parseFloat(String(price).replace(/[^0-9.]/g, "")) || 0;
+      const numericPrice =
+        parseFloat(String(price).replace(/[^0-9.]/g, "")) || 0;
       if (newItems[itemId]) {
-        delete newItems[itemId]; // Uncheck
+        delete newItems[itemId];
       } else {
-        newItems[itemId] = numericPrice; // Check
+        newItems[itemId] = numericPrice;
       }
       return newItems;
     });
@@ -41,10 +42,10 @@ const Home = () => {
   const calculateTotalSpent = () =>
     Object.values(spentItems).reduce((sum, price) => sum + price, 0);
 
-  // ✅ Checklist item component
   const ChecklistItem = ({ id, text, price }) => {
     const isChecked = !!spentItems[id];
-    const numericPrice = parseFloat(String(price).replace(/[^0-9.]/g, "")) || 0;
+    const numericPrice =
+      parseFloat(String(price).replace(/[^0-9.]/g, "")) || 0;
     const displayPrice = String(price).includes("k")
       ? price
       : `₹${numericPrice.toLocaleString()}`;
@@ -64,7 +65,6 @@ const Home = () => {
     );
   };
 
-  // --- Fetch Itinerary (live API) ---
   useEffect(() => {
     const fetchItinerary = async () => {
       if (!tripDetails || !preferences) {
@@ -74,22 +74,27 @@ const Home = () => {
       }
 
       try {
-        const response = await fetch("http://localhost:5000/api/generate-itinerary", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            destinations: tripDetails.destinations,
-            startDate: tripDetails.startDate,
-            endDate: tripDetails.endDate,
-            budget: tripDetails.budget,
-            preferences: preferences,
-          }),
-        });
+        const response = await fetch(
+          "http://localhost:5000/api/generate-itinerary",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              destinations: tripDetails.destinations,
+              startDate: tripDetails.startDate,
+              endDate: tripDetails.endDate,
+              budget: tripDetails.budget,
+              preferences: preferences,
+            }),
+          }
+        );
 
         if (!response.ok) {
           const errorText = await response.text();
           console.error(`HTTP error! status: ${response.status}`, errorText);
-          throw new Error(`Failed to generate itinerary. Status: ${response.status}`);
+          throw new Error(
+            `Failed to generate itinerary. Status: ${response.status}`
+          );
         }
 
         const data = await response.json();
@@ -112,12 +117,12 @@ const Home = () => {
   if (!trip) {
     return (
       <div className="error">
-        ❌ Failed to generate itinerary. Please ensure your backend server is running and try refreshing.
+        ❌ Failed to generate itinerary. Please ensure your backend server is
+        running and try refreshing.
       </div>
     );
   }
 
-  // Add Pre-Trip overview
   const itineraryDays = [
     { day: "Pre-Trip", date: trip.startDate, title: "Setup & Essential Booking" },
     ...(trip.days || []),
@@ -127,10 +132,10 @@ const Home = () => {
     const totalSpent = calculateTotalSpent();
     const formattedTotalSpent = totalSpent.toLocaleString();
 
-    // --- Case 1: Pre-Trip/Overview ---
     if (activeDay === -1) {
       const transportType = trip.transport?.type || "Transport";
-      const transportDetails = trip.transport?.detail || "No travel details found.";
+      const transportDetails =
+        trip.transport?.detail || "No travel details found.";
       const transportPrice = trip.transport?.price || "0";
 
       return (
@@ -191,7 +196,6 @@ const Home = () => {
       );
     }
 
-    // --- Case 2: Actual Daily Plan ---
     const currentDay = trip.days[activeDay];
     if (currentDay) {
       return (
@@ -221,17 +225,49 @@ const Home = () => {
     return <div className="info">Select a day to view its itinerary.</div>;
   };
 
+  const handleEndTrip = () => {
+    navigate("/landing");
+  };
+
   return (
     <div className="home-container">
       <main className="main-content">
-        <div className="trip-header">
-          <h1>{trip.title}</h1>
-          <div className="trip-meta">
-            <span>
-              {trip.startDate} to {trip.endDate}
-            </span>
-            <span className="budget">Total Budget {trip.budget}</span>
+        {/* ✅ Updated header with button aligned to right */}
+        <div
+          className="trip-header"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <div>
+            <h1>{trip.title}</h1>
+            <div className="trip-meta">
+              <span>
+                {trip.startDate} to {trip.endDate}
+              </span>
+              <span className="budget">Total Budget {trip.budget}</span>
+            </div>
           </div>
+
+          <button
+            onClick={handleEndTrip}
+            style={{
+              backgroundColor: "orange",
+              color: "black",
+              border: "none",
+              borderRadius: "8px",
+              padding: "10px 16px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              transition: "0.3s",
+            }}
+            onMouseOver={(e) => (e.target.style.backgroundColor = "#ffb84d")}
+            onMouseOut={(e) => (e.target.style.backgroundColor = "orange")}
+          >
+            End My Trip
+          </button>
         </div>
 
         {/* Days Section */}
@@ -253,7 +289,6 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Itinerary Content */}
         {renderItineraryContent()}
       </main>
     </div>
